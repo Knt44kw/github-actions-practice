@@ -5,11 +5,25 @@ on:
       # または以下のように複数条件の指定ができる
       # - opened
       # - edited
+    branches:
+      - "main"
+      - "develop*"
   # 他のイベントを追加したいときは、イベント同士のインデントのレベルを揃える
   workflow_dispatch:
   push:
+    # 特定のブランチでEventが動くようにできる
+    # その他の制御は 以下を参照
+    # https://docs.github.com/ja/actions/using-workflows/workflow-syntax-for-github-actions#onpushbranchestagsbranches-ignoretags-ignore
     branches:
-      - "develop"
+      - "main"
+      - "develop*"
+      # - "feature-*" feature- 以降の文字列でも eventが動くようになる 
+      # 階層が再帰的なブランチでもeventが動くようにする。以下の例でもeventが動く
+      # - "feature/**" feature/new, feature/new/new2
+    # path以下のファイルが変更されたとき Eventが動くように制御できる
+    # また path-ignoreでパスを設定すると、そこで設定されたパス以下のファイルが変更されても Eventが動かないように制御できる
+    # paths:
+    #   - ".github/workflows/*"
 jobs:
   deploy:
     runs-on: ubuntu-latest
