@@ -1,5 +1,12 @@
 name: Events Demo 1
-on: workflow_dispatch
+on:
+  pull_request:
+    types: opened # [opened, edited] のように複数のOR条件を指定できる
+      # または以下のように複数条件の指定ができる
+      # - opened
+      # - edited
+  # 他のイベントを追加したいときは、イベント同士のインデントのレベルを揃える
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
