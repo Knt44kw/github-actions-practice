@@ -24,6 +24,7 @@ on:
     # また path-ignoreでパスを設定すると、そこで設定されたパス以下のファイルが変更されても Eventが動かないように制御できる
     # paths:
     #   - ".github/workflows/*"
+# git commit -m "hoge [skip ci]" と書くと github actions内で ciを省略できる
 jobs:
   deploy:
     runs-on: ubuntu-latest
