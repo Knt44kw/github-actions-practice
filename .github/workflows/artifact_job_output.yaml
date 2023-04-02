@@ -19,6 +19,12 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    # ジョブの出力例
+    # https://docs.github.com/ja/actions/using-jobs/defining-outputs-for-jobs
+    outputs:
+      # keyの名前は任意 valueは ${{ steps.<id>.outputs.<idを指定した step 内の runで指定したkey> }}
+      # https://docs.github.com/ja/actions/learn-github-actions/contexts#steps-context
+      output1: ${{ steps.publish.outputs.script-file }}
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -27,6 +33,13 @@ jobs:
       # buildでデプロイに必要なパッケージが生成される
       - name: Build
         run: npm run build
+      - name: Publish JS filename
+        # 他のジョブに変数(今回の場合、ファイル名)を渡せるようにするためにidを指定
+        id: publish
+        # dist/assets以下にある *.js のファイルを出力
+        # 他のジョブに変数(今回の場合、ファイル名)を渡せるようにするために
+        # script-fileという key(名前は任意), value: echoの出力結果 となる key-valueを $GITHUB_OUTPUT という値に出力する必要がある
+        run: find dist/assets/*,js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
       - name: Upload artifacts
         # テンプレート: https://github.com/marketplace/actions/upload-a-build-artifact
         uses: actions/upload-artifact@v3
@@ -54,6 +67,12 @@ jobs:
           name: dist-files
       - name: Output contents
         run: ls
+      - name: Output filename
+        # 前段のジョブの結果も含めた出力が取得できるので、 needsコンテキストを利用する
+        # 規則: needs.<参照したいneedsの値>.outputs.<参照したいneedsの値として指定されたjob内の outputsのkey>
+        # <参照したいneedsの値として指定されたjob内の outputsのkey>: 今回の場合、 build.outputs.output1
+        # https://docs.github.com/ja/actions/learn-github-actions/contexts#needs-context
+        run:  echo "${{ needs.build.outputs.output1 }}"
       - name: Deploy
         run: echo "Deploying ..."
 
