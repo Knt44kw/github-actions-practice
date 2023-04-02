@@ -1,0 +1,12 @@
+name: Practice output event detail
+on:
+  # issue による workflowのトリガーは デフォルトブランチでしか動作しない
+  # https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows#issues
+  issues:
+    types: [opened, reopened]
+jobs:
+  output:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output Event details
+        run: echo "${{ toJSON(github.event) }}" 
