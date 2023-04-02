@@ -1,0 +1,72 @@
+name: Practice lint test deploy
+on: push
+
+jobs:
+  lint_test_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Installl nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm run ci
+      - name: Lint code
+        run: npm run lint
+      - name: Test code
+        run: npm run test
+      - name: Build code
+        run: npm run build
+      - name: Deploy
+        run: echo "Deploying ...."
+
+# または以下の通り
+#jobs:
+#  lint:
+#    needs: preprocess
+#    runs-on: ubuntu-latest 
+#    steps:
+#      - name: Get code
+#        uses: actions/checkout@v3
+#      - name: Install nodejs
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 18
+#      - name: Install dependencies
+#        run: npm run ci
+#      - name: lint
+#        run: npm run lint
+#  test:
+#    needs: lint
+#    runs-on: ubuntu-latest 
+#    steps:
+#      - name: Get code
+#        uses: actions/checkout@v3
+#      - name: Install nodejs
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 18
+#      - name: Install dependencies
+#        run: npm run ci
+#      - name: test
+#        run: npm run test
+#  build:
+#    needs: [lint, test]
+#    runs-on: ubuntu-latest 
+#    steps:
+#      - name: Get code
+#        uses: actions/checkout@v3
+#      - name: Install nodejs
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 18
+#      - name: Install dependencies
+#        run: npm run ci
+#      - name: build
+#        run: npm run build
+#      - name: deploy
+#        run: "Deploying ..."
+
+
