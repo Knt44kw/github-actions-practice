@@ -1,6 +1,5 @@
 name: Practice lint test deploy
 on: push
-
 jobs:
   lint_test_deploy:
     runs-on: ubuntu-latest
