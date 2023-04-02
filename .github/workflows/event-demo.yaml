@@ -7,7 +7,7 @@ on:
       # - edited
     branches:
       - "main"
-      - "develop*"
+      # - "develop*"
   # 他のイベントを追加したいときは、イベント同士のインデントのレベルを揃える
   workflow_dispatch:
   push:
@@ -16,7 +16,7 @@ on:
     # https://docs.github.com/ja/actions/using-workflows/workflow-syntax-for-github-actions#onpushbranchestagsbranches-ignoretags-ignore
     branches:
       - "main"
-      - "develop*"
+      # - "develop*"
       # - "feature-*" feature- 以降の文字列でも eventが動くようになる 
       # 階層が再帰的なブランチでもeventが動くようにする。以下の例でもeventが動く
       # - "feature/**" feature/new, feature/new/new2

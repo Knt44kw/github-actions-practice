@@ -1,0 +1,10 @@
+name: Practice output event detail
+on:
+  issues:
+    types: [opened, reopened]
+jobs:
+  output:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output Event details
+        run: echo "${{ toJSON(github.event) }}" 
