@@ -1,0 +1,48 @@
+name: Artifact Job Output
+on: 
+  push:
+    branches: 
+      - "develop*"
+      - "main"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint codes
+        run: npm run lint
+      - name: Run tests
+        run: npm run test
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      # buildでデプロイに必要なパッケージが生成される
+      - name: Build
+        run: npm run build
+      - name: Upload artifacts
+        # テンプレート: https://github.com/marketplace/actions/upload-a-build-artifact
+        uses: actions/upload-artifact@v3
+        # 後続のジョブで参照するパッケージのパスが必要なので、このテンプレートの場合、withは必須
+        with:
+          name: packages
+          path: dist
+          # アップロード対象のファイルは以下のように複数指定も可能
+          # path: |
+          #  path/output/bin/
+          #  path/output/test-results
+          #  !path/**/*.tmp
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "Deploying ..."
+
