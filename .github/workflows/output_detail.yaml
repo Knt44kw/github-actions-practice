@@ -1,5 +1,7 @@
 name: Practice output event detail
-on: issues
+on:
+  issues:
+    types: [opened, reopened]
 jobs:
   output:
     runs-on: ubuntu-latest
