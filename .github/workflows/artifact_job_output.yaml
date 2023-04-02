@@ -32,7 +32,7 @@ jobs:
         uses: actions/upload-artifact@v3
         # 後続のジョブで参照するパッケージのパスが必要なので、このテンプレートの場合、withは必須
         with:
-          name: packages
+          name: dist-files
           path: dist
           # アップロード対象のファイルは以下のように複数指定も可能
           # path: |
@@ -43,6 +43,17 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      # job間で指定されているruns-onのマシンは別々なので、通常はbuildジョブで指定されたarfitactは存在しない
+      # そのため、デプロイ前にbuildジョブで生成済みのartifactをダウンロードする
+      - name: Download build artifact
+        # https://github.com/marketplace/actions/download-a-build-artifact
+        uses: actions/download-artifact@v3
+        # ダウンロードするarifactのパスが必要なのでwithは必須
+        with:
+          # nameの値は Upload artifactsの with.nameで指定した値に揃える必要がある
+          name: dist-files
+      - name: Output contents
+        run: ls
       - name: Deploy
         run: echo "Deploying ..."
 
