@@ -1,5 +1,7 @@
 name: Practice lint test deploy
-on: push
+on: workflow_dispatch
+# 他のファイルをpushしたときにこのジョブが動くのを防ぐために、workflow_dispatchにしておく
+# push
 jobs:
   lint_test_deploy:
     runs-on: ubuntu-latest
@@ -51,7 +53,7 @@ jobs:
 #        run: npm ci
 #      - name: test
 #        run: npm run test
-#  build:
+#  deploy:
 #    needs: [lint, test]
 #    runs-on: ubuntu-latest 
 #    steps:
