@@ -10,6 +10,18 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache dependencies
+        # 各 jobで 依存関係のインストールを繰り返し行っているので、 workflowの実行に時間がかかる
+        # このような繰り返し実行され、時間のかかるジョブを共通化するためにキャッシュを利用する
+        # https://github.com/marketplace/actions/cache
+        uses: actions/cache@v3
+        with:
+          # nodejsの依存関係などのキャッシュが格納されているディレクトリ
+          path: ~/.npm
+          # key: 他のジョブでキャッシュを参照するために必要
+          # ハッシュ値: 依存関係に変更が生じると ~/.npmの中身が変わる。 更新されたキャッシュを後続ジョブで参照できるようにするために生成
+          # package-lock.jsonはパッケージの依存関係をまとめたファイル
+          key: dependencies-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
         run: npm ci
       - name: Lint codes
