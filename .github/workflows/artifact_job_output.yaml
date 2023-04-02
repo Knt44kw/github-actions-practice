@@ -39,7 +39,7 @@ jobs:
         # dist/assets以下にある *.js のファイルを出力
         # 他のジョブに変数(今回の場合、ファイル名)を渡せるようにするために
         # script-fileという key(名前は任意), value: echoの出力結果 となる key-valueを $GITHUB_OUTPUT という値に出力する必要がある
-        run: find dist/assets/*,js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+        run: find dist/assets/*.js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
       - name: Upload artifacts
         # テンプレート: https://github.com/marketplace/actions/upload-a-build-artifact
         uses: actions/upload-artifact@v3
