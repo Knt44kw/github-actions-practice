@@ -49,4 +49,4 @@ jobs:
         # MONGODB_DB_NAME は workflow 全体の変数なので値の参照が可能
         run: |        
           echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
-          echo "MONGODB_DB_NAME: ${{ $MONGODB_DB_NAME }}"
+          echo "MONGODB_DB_NAME: $MONGODB_DB_NAME"
