@@ -4,7 +4,7 @@ name: Deploy Project
 # 特定のファイル, ブランチがpushされたときに jobs 以下が動くように限定することもできる
 # https://docs.github.com/ja/actions/using-workflows/events-that-trigger-workflows#running-your-workflow-only-when-a-push-to-specific-branches-occurs
 # また [<イベント>, <イベント>]のように複数イベントのどれかを起点としてjobsを動かすことができる
-on: workfloworkflow_dispatch
+on: workflow_dispatch
 # [push, workflow_dispatch]
 jobs:
   test:
