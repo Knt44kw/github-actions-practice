@@ -28,7 +28,7 @@ jobs:
     outputs:
       # stepレベルで出力を受け取る
       # https://github.com/Knt44kw/github-actions-practice/blob/section1to5/.github/workflows/artifact_job_output.yaml#L37-L41 と同じ
-      outcome: ${{ steps.set-result.outputs.set-result }}}
+      outcome: ${{ steps.set-result.outputs.step-result }}}
     runs-on: ubuntu-latest
     steps:
       - name: download artifact

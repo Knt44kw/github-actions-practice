@@ -92,7 +92,7 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Print deplopy output
+      - name: Print deploy output
         run: ${{ needs.deploy.outputs.result }}
   report:
     # lint or deployどちらかが失敗することで動く
