@@ -1,0 +1,9 @@
+name: Reuseable Deploy
+# 他のworkflowから参照された時実行される
+on: workflow_call
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output Information
+        run: echo "Deploying and uploading...."
