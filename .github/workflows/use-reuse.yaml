@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print deploy output
-        run: ${{ needs.deploy.outputs.result }}
+        run: echo "${{ needs.deploy.outputs.result }}"
   report:
     # lint or deployどちらかが失敗することで動く
     # deployは test, buildに依存して実行されるので、実質 lint, test, build, deployのいずれかが失敗したらこのジョブが動く
