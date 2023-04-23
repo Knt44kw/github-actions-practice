@@ -81,8 +81,19 @@ jobs:
     # 前提: ルートディレクトリ=リポジトリ。参照したい他のworkflowがあるyamlのパスを指定する
     uses: ./.github/workflows/reuseable.yaml
     with:
-      # reuseable.yamlで定義した、inputの値をkeyとして指定。valueはアップロードの箇所で記載したwith.nameの値にする
-      artifact-name: dist-files 
+      # usesで指定したyamlで定義した、inputの値をkeyとして指定。valueはアップロードの箇所で記載したwith.nameの値にする
+      artifact-name: dist-files
+    # secretの渡し方
+    # secrets:
+    #  some-secret: ${{ secrets.some-secrets }}
+  # 再利用可能なworkflowから受け取った出力の受け取り方の例は、以下を参照
+  # https://docs.github.com/ja/actions/using-workflows/reusing-workflows#using-outputs-from-a-reusable-workflow
+  print-deploy-result:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print deplopy output
+        run: ${{ needs.deploy.outputs.result }}
   report:
     # lint or deployどちらかが失敗することで動く
     # deployは test, buildに依存して実行されるので、実質 lint, test, build, deployのいずれかが失敗したらこのジョブが動く
