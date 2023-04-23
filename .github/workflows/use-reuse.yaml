@@ -80,6 +80,9 @@ jobs:
     needs: build
     # 前提: ルートディレクトリ=リポジトリ。参照したい他のworkflowがあるyamlのパスを指定する
     uses: ./.github/workflows/reuseable.yaml
+    with:
+      # reuseable.yamlで定義した、inputの値をkeyとして指定。valueはアップロードの箇所で記載したwith.nameの値にする
+      artifact-name: dist-files 
   report:
     # lint or deployどちらかが失敗することで動く
     # deployは test, buildに依存して実行されるので、実質 lint, test, build, deployのいずれかが失敗したらこのジョブが動く
