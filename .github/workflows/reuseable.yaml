@@ -1,4 +1,5 @@
 name: Reuseable Deploy
+# 文法: https://docs.github.com/ja/actions/using-workflows/reusing-workflows
 # 他のworkflowから参照された時実行される
 on: workflow_call
 jobs:
