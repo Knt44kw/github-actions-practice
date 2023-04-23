@@ -1,4 +1,4 @@
-name: execution flow
+name: reuse workflow
 on:
   push:
     branches:
