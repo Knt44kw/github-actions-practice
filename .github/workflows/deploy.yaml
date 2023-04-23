@@ -10,13 +10,16 @@ jobs:
   test:
     environment: testing
     runs-on: ubuntu-latest
-    container: 
-      image: node:16
+    # nodeコンテナ上でサービスコンテナ(mongodb)を動かさず、runner上で動かす
+    # container: 
+    #  image: node:16
     # container: node:16 とも書ける
     env:
       MONGODB_CONNECTION_PROTOCOL: mongodb
       # サービスコンテナに接続するために、値を servicesのkey (mongodb)に揃える
-      MONGODB_CLUSTER_ADDRESS: mongodb
+      # MONGODB_CLUSTER_ADDRESS: mongodb
+      # runner上で動かすためにlocalhostにする。ポート番号はmongodbのデフォルト値
+      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017
       # services.mongodb.envで指定した値と揃える
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: example
@@ -27,6 +30,10 @@ jobs:
       mongodb:
         # https://hub.docker.com/_/mongo を利用
         image: mongo
+        # デフォルトでは、サービスコンテナはrunnerに対してポート開放していない。
+        # そのため ports <runner側のポート>:<コンテナ側のポート>として runnerがコンテナにアクセスできるようにする
+        ports:
+          - 27017:27017
         # 指定必須の環境変数。テスト用なのでprodと一緒でなければ、Secret(ユーザ名とパスワード)はベタ書きで良い
         env:
           MONGO_INITDB_ROOT_USERNAME: root
