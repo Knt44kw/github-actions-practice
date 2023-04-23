@@ -1,0 +1,68 @@
+name: Deployment (Container)
+on:
+  push:
+    branches:
+      - section8
+env:
+  CACHE_KEY: node-deps
+  MONGODB_DB_NAME: gha-demo
+jobs:
+  test:
+    environment: testing
+    runs-on: ubuntu-latest
+    # nodeコンテナ上でサービスコンテナ(mongodb)を動かさず、runner上で動かす
+    # container: 
+    #  image: node:16
+    # container: node:16 とも書ける
+    env:
+      MONGODB_CONNECTION_PROTOCOL: mongodb
+      # サービスコンテナに接続するために、値を servicesのkey (mongodb)に揃える
+      # MONGODB_CLUSTER_ADDRESS: mongodb
+      # runner上で動かすためにlocalhostにする。ポート番号はmongodbのデフォルト値
+      MONGODB_CLUSTER_ADDRESS: 127.0.0.1:27017
+      # services.mongodb.envで指定した値と揃える
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: example
+      PORT: 8080
+    # サービス「コンテナ(DBの接続確認など、テスト用で使う一時的なコンテナ。1つのジョブが終了したら消える)
+    # https://docs.github.com/ja/actions/using-containerized-services/about-service-containers
+    services:
+      mongodb:
+        # https://hub.docker.com/_/mongo を利用
+        image: mongo
+        # デフォルトでは、サービスコンテナはrunnerに対してポート開放していない。
+        # そのため ports <runner側のポート>:<コンテナ側のポート>として runnerがコンテナにアクセスできるようにする
+        ports:
+          - 27017:27017
+        # 指定必須の環境変数。テスト用なのでprodと一緒でなければ、Secret(ユーザ名とパスワード)はベタ書きで良い
+        env:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ env.CACHE_KEY }}-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Run server
+        run: npm start & npx wait-on http://127.0.0.1:$PORT # requires MongoDB Atlas to accept requests from anywhere!
+      - name: Run tests
+        run: npm test
+      - name: Output information
+        run: |
+          echo "MONGODB_USERNAME: $MONGODB_USERNAME"
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output information
+        env:
+          PORT: 3000
+        run: |        
+          echo "MONGODB_DB_NAME: $MONGODB_DB_NAME"
+          echo "MONGODB_USERNAME: $MONGODB_USERNAME"
+          echo "${{ env.PORT }}"
