@@ -1,10 +1,20 @@
 name: "Deploy to S3"
 description: "Deploy as static webstite via AWS S3"
+inputs:
+  bucket:
+    description: "The S3 bucket name"
+    required: true
+  region:
+    description: "The S3 region name"
+    required: false
+    default: 'ap-northeast-1'
+  dist-folder:
+    description: "The folder containing the deployable files"
+    required: true
 runs:
   # using: 'node16' で JavaScript Actionを使うことになる
   using: 'node16'
-  # pre: "preproces.js" 前処理用のjsファイルも指定できる 
-
+  # pre: "preproces.js" 前処理用のjsファイルも指定できる
   # custom actionsが存在するパスをカレントディレクトリとして、 stepsを定義するmainのjs指定する
   # 以下のエラーが生じたので、拡張子をcjsにする
   # ReferenceError: require is not defined in ES module scope, you can use import instead
