@@ -68,3 +68,9 @@ jobs:
         run: ls
       - name: Deploy site
         run: echo "Deploying..."
+  information:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run custom actions
+        # JavaScript Actionsを定義したディレクトリを指定
+        uses: ./.github/actions/deploy-s3-javascript

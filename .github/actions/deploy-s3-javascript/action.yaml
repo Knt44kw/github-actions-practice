@@ -1,0 +1,9 @@
+name: "Deploy to S3"
+description: "Deploy as static webstite via AWS S3"
+runs:
+  # using: "node16" で JavaScript Actionを使うことになる
+  using: "node16"
+  # pre: "preproces.js" 前処理用のjsファイルも指定できる 
+  # custom actionsが存在するパスをカレントディレクトリとして、 stepsを定義するmainのjs指定する
+  main: "main.js"
+  # post: "post_process.js" 後処理用のjsファイルも指定できる
