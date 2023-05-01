@@ -13,7 +13,13 @@ jobs:
         # 自分のリポジトリ内でcustom actionを定義している場合は、<ユーザ名>/<リポジトリ名>の規則で指定する
         # このときのvalue: Knt44kw/github-actions-practice
         # 定義していない場合は、custom actionのあるyamlのディレクトリパスを指定。ルートディレクトリはリポジトリ
+        id: cached
         uses: ./.github/actions/cached-deps
+        # custom actionのinputsを指定したい場合は以下のように行う
+        with:
+          caching: 'false'
+      - name: Output Information
+        run: echo "Cache usesd?  ${{ steps.cached.outputs.used-cache }}"
       - name: Lint code
         run: npm run lint
   test:
