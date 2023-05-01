@@ -1,16 +1,27 @@
 name: "Get Cache Dependencies"
 description: "Get the dependencies (via npm) and cache them."
+# inputの名前を自分で指定できる
+inputs:
+  # keyの名前。名前は任意
+  caching: 
+    # descriptionは指定必須
+    description: "whether to cache dependencies or not"
+    # required = trueで、 keyは指定必須になる。
+    required: false
+    # keyに対するデフォルトの値を指定できる (シングルクォーテーションにする)
+    default: 'true'
 runs:
   using: "composite"
   steps:
       - name: Cache dependencies
+        if: inputs.caching == 'true'
         id: cache
         uses: actions/cache@v3
         with:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache.outputs.cache-hit != 'true' || inputs.caching != 'true'
         run: npm ci
         # custom actionsににて、runによる実行を定義するときにはシェル環境を書く必要がある
         shell:  bash
