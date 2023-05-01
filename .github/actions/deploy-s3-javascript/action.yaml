@@ -4,6 +4,11 @@ runs:
   # using: 'node16' で JavaScript Actionを使うことになる
   using: 'node16'
   # pre: "preproces.js" 前処理用のjsファイルも指定できる 
+
   # custom actionsが存在するパスをカレントディレクトリとして、 stepsを定義するmainのjs指定する
-  main: "main.js"
+  # 以下のエラーが生じたので、拡張子をcjsにする
+  # ReferenceError: require is not defined in ES module scope, you can use import instead
+  # This file is being treated as an ES module because it has a '.js' file extension and '<>/package.json' contains "type": "module". 
+  # To treat it as a CommonJS script, rename it to use the '.cjs' file extension.
+  main: "main.cjs"
   # post: "post_process.js" 後処理用のjsファイルも指定できる
