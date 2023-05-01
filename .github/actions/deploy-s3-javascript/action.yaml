@@ -11,6 +11,10 @@ inputs:
   dist-folder:
     description: "The folder containing the deployable files"
     required: true
+outputs:
+  website-url:
+    # valueは不要。 出力値jsファイルの中で利用する
+    description: "The URL of the deployed website"
 runs:
   # using: 'node16' で JavaScript Actionを使うことになる
   using: 'node16'

@@ -67,8 +67,11 @@ jobs:
       - name: Output contents
         run: ls
       - name: Deploy site
+        id: deploy
         uses: ./.github/actions/deploy-s3-javascript
         env:
+          # aws-cliを使って、s3バケットに操作する際は、secretを用意する必要がある。
+          # そのsecretは リポジトリレベルで github上に登録する 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
@@ -76,3 +79,6 @@ jobs:
           # ダウンロードしたartifactが保存されているディレクトリを指定
           dist-folder: ./dist
           # bucket-region: test-region regionがデフォルトとは異なるときは指定
+      - name: Output Information
+        run: |
+          echo "Live URL: ${{ steps.deploy.outputs.website-url }}"
