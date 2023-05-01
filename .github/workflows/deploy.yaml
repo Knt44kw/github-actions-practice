@@ -68,9 +68,10 @@ jobs:
         run: ls
       - name: Deploy site
         id: deploy
-        uses: ./.github/actions/deploy-s3-javascript
+        uses: ./.github/actions/deploy-s3-docker
+        # uses: ./.github/actions/deploy-s3-javascript
         env:
-          # aws-cliを使って、s3バケットに操作する際は、secretを用意する必要がある。
+          # aws-cli/sdk を使って、s3バケットに操作する際は、secretを用意する必要がある。
           # そのsecretは リポジトリレベルで github上に登録する 
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
