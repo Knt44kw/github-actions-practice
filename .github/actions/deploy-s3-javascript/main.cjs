@@ -13,13 +13,13 @@ const exec = require('@actions/exec');
 function run () {
   // 入力(input)の値を取得する core.getInput("actions.yamlに書いた inputsのkey名", {required: true or false})
   // requred= trueのとき、actions.yamlのinputsの値を取得する
-  const bucket = core.getInput("bucket", { required: true });
-  const region = core.getInput("region", { required: true });
-  const distFolder = core.getInput("dist-folder", { required: true });
+  const s3bucket = core.getInput('bucket', { required: true });
+  const region = core.getInput('region', { required: true });
+  const distFolder = core.getInput('dist-folder', { required: true });
 
   // ファイルアップロード
   // ここで実行されるコマンドのインストール状況は custom actionsを参照する yamlのruns-onに依存する
-  const s3Uri = `s3://${bucket}`;
+  const s3Uri = `s3://${s3bucket}`;
   // シェルでコマンドの実行結果を変数として取得した時と同様に バックスラッシュを利用
   exec.exec(`aws s3 sync ${distFolder} ${s3Uri} --region ${region}`);
 
