@@ -1,8 +1,8 @@
-name: execution flow
+name: Deployment
 on:
   push:
     branches:
-      - section7
+      - section9
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -16,9 +16,6 @@ jobs:
           path: node_modules
           key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Install dependencies
-        # cacheの結果はcache-hit という値を通して取得できる。キャッシュを使ったならtrue(文字列)、そうでないならfalse
-        # https://github.com/actions/cache#outputs
-        # 条件判定はシングルクォーテーションである必要がある
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Lint code
@@ -38,17 +35,10 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Test code
-        # このstepが失敗したとき、Upload test reportが動くようにするためにidをつける。値は任意
-        id: test-code
+        id: run-tests
         run: npm run test
       - name: Upload test report
-        # idを指定したstepの実行結果を受け取れるようにする。stepが失敗したかどうかは steps.<step_id>.outcomeで受け取れる
-        # steps.<step_id>.outcomeの値は success, failure, cancelled, skippedのいずれか
-        # 詳細: https://docs.github.com/ja/actions/learn-github-actions/contexts#steps-context
-        # 特定のstepが失敗したと認識させるためには、 steps.<step_id>.outcomeの値が一致するだけでなく、特殊関数 failure()が必要
-        # 詳細: https://docs.github.com/ja/actions/learn-github-actions/expressions#status-check-functions 
-        if: failure() && steps.test-code.outcome == 'failure'
-        # if: ${{ failure() && steps.test-code.outcome == 'failure' }} とも書ける
+        if: failure() && steps.run-tests.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: test-report
@@ -69,7 +59,6 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
       - name: Build website
-        id: build-website
         run: npm run build
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
@@ -80,23 +69,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Get code
+        uses: actions/checkout@v3
       - name: Get build artifacts
         uses: actions/download-artifact@v3
         with:
           name: dist-files
+          path: ./dist
       - name: Output contents
         run: ls
-      - name: Deploy
+      - name: Deploy site
         run: echo "Deploying..."
-  report:
-    # lint or deployどちらかが失敗することで動く
-    # deployは test, buildに依存して実行されるので、実質 lint, test, build, deployのいずれかが失敗したらこのジョブが動く
-    needs: [lint, deploy]
-    # 他の jobで起こったエラーをトリガーとして、steps以下が動く。
-    if: failure()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Output Information
-        run: |
-          echo "Someting went wrong"
-          echo "${{ github }}"
