@@ -6,6 +6,10 @@ on:
 jobs:
   assign-label:
     runs-on: ubuntu-latest
+    # workflowレベルでの権限設定も可能
+    permissions:
+      # write権限にすることで、ソースコードの読み取りや、リポジトリにactionsを追加するということができなくなる
+      issues: write
     steps:
       - name: Assign label
         if: contains(github.event.issue.title, 'bug')
