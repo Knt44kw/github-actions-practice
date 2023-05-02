@@ -8,9 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Assign label
+        env:
+          # 環境変数としてissue名を指定することでスクリプトインジェクションの対策となる
+          ISSUE_TITLE: "${{ github.event.issue.title }}"
         run: |
-          issue_title="${{ github.event.issue.title }}"
-          if [[ "$issue_title" == *"bug"* ]]; then
+          if [[ "$ISSUE_TITLE" == *"bug"* ]]; then
           echo "Issue is about a bug!"
           else
           echo "Issue is not about a bug"
