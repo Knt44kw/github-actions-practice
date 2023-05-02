@@ -6,9 +6,10 @@ on:
 jobs:
   assign-label:
     runs-on: ubuntu-latest
-    # workflowレベルでの権限設定も可能
+    # workflowレベルでの権限設定も可能。
     permissions:
       # write権限にすることで、ソースコードの読み取りや、リポジトリにactionsを追加するということができなくなる
+      # issue + read権限の場合は、issueに関する情報は取得できるが、ラベルの付与はできない
       issues: write
     steps:
       - name: Assign label
